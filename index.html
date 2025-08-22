@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahmoud's Learning Space 😀 - مساحة محمود التعليمية</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts (Cairo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the page */
+        body {
+            font-family: 'Cairo', sans-serif;
+            line-height: 1.7; /* Improved line spacing for readability */
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #4ade80 0%, #22d3ee 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content, .tab-desc {
+            display: none;
+        }
+        
+        .tab-content.active, .tab-desc.active {
+            display: block;
+        }
+        
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button.active {
+            background: linear-gradient(135deg, #4ade80 0%, #22d3ee 100%);
+            color: white;
+        }
+        
+        .search-highlight {
+            background-color: #fef08a;
+            padding: 1px 3px;
+            border-radius: 4px;
+            color: #333;
+        }
+        
+        .floating-action {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .social-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            transform: scale(1.1);
+        }
+        
+        .content-link {
+            display: flex; /* Use flexbox for better alignment */
+            align-items: center;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            text-decoration: none;
+            color: #374151;
+            transition: all 0.3s ease;
+        }
+
+        .content-link .link-icon {
+            margin-left: 8px; /* Margin for icon */
+        }
+        
+        .content-link:hover {
+            background: linear-gradient(135deg, #4ade80 0%, #22d3ee 100%);
+            color: white;
+            transform: translateX(-5px);
+            border-color: transparent;
+        }
+        
+        /* Accordion Styles */
+        .accordion-trigger {
+            cursor: pointer;
+            width: 100%;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .accordion-trigger.active {
+             border-bottom-left-radius: 0;
+             border-bottom-right-radius: 0;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            background-color: #f9fafb;
+            border-radius: 0 0 8px 8px;
+            border: 1px solid #e5e7eb;
+            border-top: none;
+            margin-top: -8px; /* Overlap with trigger */
+            padding: 0;
+        }
+        .accordion-content .content-wrapper {
+            padding: 1.5rem 1rem 1rem 1rem;
+        }
+
+        .accordion-icon {
+            transition: transform 0.4s ease;
+        }
+        .accordion-trigger.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+        .sub-link {
+            background-color: #f9fafb; /* Slightly different background for sub-links */
+            border-right: 3px solid #4ade80;
+            margin-right: 10px;
+            font-size: 0.9rem;
+        }
+        .sub-link:hover {
+            border-color: #22d3ee;
+        }
+
+        /* Topic Card Styles */
+        .topic-button {
+            background-color: #10b981;
+            color: white;
+            transition: background-color 0.3s ease;
+            display: block;
+        }
+        .topic-button:hover {
+            background-color: #059669;
+        }
+
+
+        /* Custom alert box for form submission */
+        #custom-alert {
+            position: fixed;
+            top: -100px; /* Start off-screen */
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 16px 32px;
+            background-color: #2dd4bf;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 2000;
+            transition: top 0.5s ease-in-out;
+        }
+
+        #custom-alert.show {
+            top: 20px; /* Slide in */
+        }
+        
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-white sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <div class="bg-white rounded-full p-2 shadow-md">
+                        <span class="text-green-500 text-2xl font-bold">M</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-bold">Mahmoud's Learning Space 😀</h1>
+                        <p class="text-xs sm:text-sm opacity-90">مساحة محمود التعليمية - رحلة التعلم المستمر</p>
+                    </div>
+                </div>
+                 <!-- Search Bar -->
+                <div class="w-full lg:w-auto lg:flex-1 lg:max-w-md lg:mx-auto order-3 lg:order-2">
+                    <div class="relative">
+                        <input type="text" id="searchInput" placeholder="دوّر على اللي محتاجه..." class="w-full text-gray-800 pr-4 pl-10 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-white shadow-sm">
+                        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+                <div class="order-2 lg:order-3">
+                    <button onclick="showTabAndScroll('join')" class="bg-white bg-opacity-20 py-2 px-4 rounded-full hover:bg-opacity-30 transition-colors">
+                        انضم إلينا الآن
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 pb-8" id="main-content">
+        <!-- Introduction -->
+        <div class="bg-white rounded-lg shadow-lg p-6 sm:p-8 my-8">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">مرحباً بكم في مساحة محمود التعليمية! 😀</h2>
+                <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    هنا هتلاقوا كل اللي محتاجينه في رحلة التعلم بتاعتكم في طب الأسنان والذكاء الاصطناعي. كل حاجة متنظمة ومجمعة في مكان واحد عشان توصلولها بسهولة.
+                </p>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="container mx-auto px-4 mb-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white rounded-lg p-4 sm:p-6 text-center shadow-md card-hover">
+                    <i class="fas fa-users text-2xl sm:text-3xl text-green-500 mb-3"></i>
+                    <h3 class="text-xl sm:text-2xl font-bold text-gray-800">+15K</h3>
+                    <p class="text-sm text-gray-600">مشترك في القناة</p>
+                </div>
+                <div class="bg-white rounded-lg p-4 sm:p-6 text-center shadow-md card-hover">
+                    <i class="fas fa-book text-2xl sm:text-3xl text-blue-500 mb-3"></i>
+                    <h3 class="text-xl sm:text-2xl font-bold text-gray-800">+200</h3>
+                    <p class="text-sm text-gray-600">محتوى تعليمي</p>
+                </div>
+                <div class="bg-white rounded-lg p-4 sm:p-6 text-center shadow-md card-hover">
+                    <i class="fas fa-robot text-2xl sm:text-3xl text-purple-500 mb-3"></i>
+                    <h3 class="text-xl sm:text-2xl font-bold text-gray-800">50+</h3>
+                    <p class="text-sm text-gray-600">محتوى AI</p>
+                </div>
+                <div class="bg-white rounded-lg p-4 sm:p-6 text-center shadow-md card-hover">
+                    <i class="fas fa-trophy text-2xl sm:text-3xl text-yellow-500 mb-3"></i>
+                    <h3 class="text-xl sm:text-2xl font-bold text-gray-800">مسابقات</h3>
+                    <p class="text-sm text-gray-600">جوائز أسبوعية</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tab Navigation -->
+        <div class="bg-white rounded-lg shadow-lg mb-8">
+            <div class="border-b border-gray-200">
+                <nav class="flex flex-col sm:flex-row -mb-px">
+                    <button onclick="showTab('dentistry')" class="tab-button flex-1 py-4 px-2 sm:px-6 text-center font-medium rounded-t-lg sm:rounded-tr-none sm:rounded-tl-lg active" id="dentistry-tab">
+                        <i class="fas fa-tooth ml-2"></i>
+                        <span>تخصصات طب الأسنان</span>
+                    </button>
+                    <button onclick="showTab('ai')" class="tab-button flex-1 py-4 px-2 sm:px-6 text-center font-medium" id="ai-tab">
+                        <i class="fas fa-robot ml-2"></i>
+                        <span>Smarter With AI</span>
+                    </button>
+                    <button onclick="showTab('community')" class="tab-button flex-1 py-4 px-2 sm:px-6 text-center font-medium" id="community-tab">
+                        <i class="fas fa-handshake-angle ml-2"></i>
+                        <span>تعلم معنا</span>
+                    </button>
+                    <button onclick="showTab('join')" class="tab-button flex-1 py-4 px-2 sm:px-6 text-center font-medium rounded-b-lg sm:rounded-bl-none sm:rounded-tr-lg" id="join-tab">
+                        <i class="fas fa-users ml-2"></i>
+                        <span>المجتمع</span>
+                    </button>
+                </nav>
+            </div>
+            <div id="tab-descriptions" class="p-6 border-b border-gray-200">
+                <p id="dentistry-desc" class="tab-desc active text-gray-600 text-center">كل ما تحتاجه في رحلتك التعليمية، من المحاضرات والنصائح العملية إلى محتوى متخصص لمرحلة الامتياز. 🎓</p>
+                <p id="ai-desc" class="tab-desc text-gray-600 text-center">تعلم كيف تستخدم أدوات الذكاء الاصطناعي لتطوير مهاراتك وزيادة إنتاجيتك. 🚀</p>
+                <p id="community-desc" class="tab-desc text-gray-600 text-center">انضم لقنواتنا التعليمية المتخصصة على تليجرام وكن على اطلاع دائم بكل جديد في مجالك. 📚</p>
+                <p id="join-desc" class="tab-desc text-gray-600 text-center">تواصل مع زملائك، شارك في النقاشات، كن جزء من رحلة التعلم المستمر وتابع كل جديد. 🤝</p>
+            </div>
+
+            <!-- Dentistry Tab Content -->
+            <div id="dentistry-content" class="tab-content active p-6">
+                <div class="space-y-8">
+                    <!-- Row 1 -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Operative -->
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6 card-hover">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-tools text-green-600 ml-3"></i>Operative</h3>
+                            <div class="space-y-2">
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-shield-alt link-icon text-blue-500"></i><span>Rubber dam</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">كل حاجة عن الـ Rubber dam من الألف للياء، عشان تشتغل على رواقة وفي بيئة معزولة صح. ✅</p><a href="https://t.me/c/1581316555/95" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-layer-group link-icon text-purple-500"></i><span>Deep margin management</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">الحواف العميقة أو الـ Deep margin عاملالك مشكلة؟ هنا هتلاقي الخلاصة عشان تعرف تتعامل معاها صح. 🛠️</p><a href="https://t.me/Mahmoud_learning_space/135" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-bug link-icon text-red-500"></i><span>Deep caries management</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">إزاي تدير حالات التسوس العميق وتحافظ على حيوية العصب بأحدث الطرق اللي العلم وصلها. ❤️</p><a href="https://t.me/Mahmoud_learning_space/148" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-balance-scale link-icon text-orange-500"></i><span>Occlusal adjustment</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">دليل عملي عشان تظبط الـ Occlusion بعد الحشوات ومتخليش المريض يشتكي من حاجة عالية. ⚖️</p><a href="https://t.me/c/1581316555/97" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-grip-horizontal link-icon text-teal-500"></i><span>Matricing</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">كل اللي محتاج تعرفه عن الـ Matrix systems عشان تطلع Contact point مظبوطة في حالات Class II. 🎯</p><a href="https://t.me/c/1581316555/103" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-smile link-icon text-pink-500"></i><span>Anterior composite</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">فن تجميل الأسنان الأمامية بالـ Composite، عشان تطلع شغل شكله طبيعي ومحدش يفرقه عن السنة الحقيقية. 🎨</p><a href="https://t.me/Mahmoud_learning_space/105" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-gem link-icon text-indigo-500"></i><span>Finishing and Polishing</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">الخطوات الأخيرة عشان تخلي سطح الحشوة بيلمع وميقفش عليه أي تصبغات. ✨</p><a href="https://t.me/Mahmoud_learning_space/109" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                            </div>
+                        </div>
+                        <!-- Fixed -->
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 card-hover">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-crown text-blue-600 ml-3"></i>Fixed Prosthodontics</h3>
+                            <div class="space-y-2">
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-cog link-icon text-gray-500"></i><span>Management of compromised teeth</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">إزاي تقيّم وتصلح الأسنان المتهالكة، وإمتى تاخد قرار الحفظ أو الخلع. 💪</p><a href="https://t.me/Mahmoud_learning_space/143" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-hand-paper link-icon text-purple-500"></i><span>Impression</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">تقنيات عشان تاخد مقاسات مظبوطة بالمللي للتركيبات الثابتة. 👌</p><a href="https://t.me/Mahmoud_learning_space/158" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-link link-icon text-blue-500"></i><span>Bonding to Zirconia</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">البروتوكول الصح عشان تلزق تركيبات الزيركون وتضمن إنها متتخلعش أبداً. 🔗</p><a href="https://t.me/Mahmoud_learning_space/160" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-gem link-icon text-teal-500"></i><span>Bonding to glass ceramics</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">خطوات ونصائح عشان تعمل Bonding قوي وفعال لتركيبات الـ e.max. 💎</p><a href="https://t.me/Mahmoud_learning_space/163" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-search link-icon text-green-500"></i><span>Restorability</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">دليل شامل يساعدك تاخد القرار الصح: هل السنة دي ينفع تتصلح ولا نخلعها؟ 🤔</p><a href="https://t.me/Perioround/41" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Row 2 -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <!-- Dr. Ahmed Ashraf Content -->
+                        <div class="bg-gradient-to-br from-teal-50 to-teal-100 rounded-lg p-6 card-hover">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-user-graduate text-teal-600 ml-3"></i>محتوى د. أحمد أشرف</h3>
+                            <div class="space-y-2">
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-notes-medical link-icon text-blue-500"></i><span>Clinical cases</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">حالات سريرية متنوعة لمناقشة التشخيص وخطة العلاج. 👨‍⚕️</p><a href="https://t.me/AhmedAshraflearningspace/64" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-microphone-alt link-icon text-purple-500"></i><span>Voice overs</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">شروحات صوتية لمواضيع مهمة في طب الأسنان. 🎙️</p><a href="https://t.me/AhmedAshraflearningspace/63" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-book link-icon text-orange-500"></i><span>Books recommendations</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">ترشيحات لأفضل الكتب والمراجع في مختلف تخصصات طب الأسنان. 📚</p><a href="https://t.me/AhmedAshraflearningspace/62" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-link link-icon text-green-500"></i><span>السلسلة كاملة</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">رابط للوصول إلى السلسلة الكاملة من محتوى د. أحمد أشرف التعليمي. 🔗</p><a href="https://t.me/AhmedAshraflearningspace/67" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fab fa-facebook-f link-icon text-blue-800"></i><span>صفحة دكتور احمد</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">تابع د. أحمد أشرف على الفيسبوك للمزيد من المحتوى والنقاشات. 👍</p><a href="https://www.facebook.com/ahmed.ashraf.75436" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                            </div>
+                        </div>
+                        <!-- Endo -->
+                        <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-6 card-hover">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-syringe text-red-600 ml-3"></i>Endodontics</h3>
+                            <div class="space-y-2">
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-exclamation-triangle link-icon text-red-500"></i><span>Pain management</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">إزاي تسيطر على الألم صح قبل وأثناء وبعد علاج العصب عشان المريض يدعيلك. 😌</p><a href="https://t.me/Endoround/2" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-heart link-icon text-pink-500"></i><span>Vital pulp therapy</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">طرق تحافظ بيها على حيوية العصب في الأسنان الدائمة وتتجنب علاج الجذور الكامل. 🌱</p><a href="https://t.me/Mahmoud_learning_space/149" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-unlock link-icon text-orange-500"></i><span>Management of open apex</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">التقنيات المختلفة للتعامل مع حالات الـ Open apex وإزاي تخليها تقفل. ⏳</p><a href="https://t.me/Mahmoud_learning_space/120" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-clipboard-check link-icon text-blue-500"></i><span>Protocol of RCT</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">بروتوكول علاج العصب خطوة بخطوة من أول ما تفتح لحد ما تقفل الـ Access. ✔️</p><a href="https://t.me/Endoround/5?single" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-redo link-icon text-purple-500"></i><span>Retreatment</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">شرح تفصيلي لحالات إعادة علاج العصب مع دكتور مصطفى أنور. 🔄</p><a href="https://t.me/Endoround/5?single" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Row 3 -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <!-- Perio & Diagnosis -->
+                        <div class="bg-gradient-to-br from-pink-50 to-pink-100 rounded-lg p-6 card-hover">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-leaf text-pink-600 ml-3"></i>Perio & Diagnosis</h3>
+                            <div class="space-y-2">
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-smile link-icon text-pink-500"></i><span>Gummy smile & crown lengthening</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">كل حاجة عن الـ Gummy smile وعمليات إطالة التاج عشان تظبط جمال الابتسامة. 😊</p><a href="https://t.me/c/1581316555/98" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-clipboard-list link-icon text-green-500"></i><span>Diagnosis round</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">جولات تشخيصية لحالات مختلفة عشان تقوي مهاراتك في وضع خطط العلاج الصح. 🔍</p><a href="https://t.me/Mahmoud_learning_space/22" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                            </div>
+                        </div>
+                        <!-- Medicine -->
+                        <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-6 card-hover">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-pills text-orange-600 ml-3"></i>Medicine</h3>
+                            <div class="space-y-2">
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-capsules link-icon text-orange-500"></i><span>Medications</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">مرجع سريع لأهم الأدوية اللي بنستخدمها في طب الأسنان، بجرعاتها واستخداماتها. 💊</p><a href="https://t.me/Mahmoud_learning_space/141" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-mobile-alt link-icon text-purple-500"></i><span>تطبيق الادوية</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">تطبيق تفاعلي لمساعدتك في اختيار الأدوية المناسبة للحالات المختلفة. 📱</p><a href="https://t.me/Smarter_With_Ai/59" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Row 4 -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Tips -->
+                        <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-6 card-hover">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-lightbulb text-yellow-600 ml-3"></i>نصائح مهمة</h3>
+                            <div class="space-y-2">
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-graduation-cap link-icon text-blue-500"></i><span>عن التعلم والتخطيط</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">نصائح تساعدك على تنظيم وقتك وتحسين طرق مذاكرتك. 🧠</p><a href="https://t.me/Mahmoud_learning_space/127" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-star link-icon text-yellow-500"></i><span>امتياز</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">كل ما يخص سنة الامتياز وكيفية تحقيق أقصى استفادة منها. 🎓</p><a href="https://t.me/Mahmoud_learning_space/128" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-folder link-icon text-green-500"></i><span>فولدرات تليجرام</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">طريقة تنظيم قنوات التليجرام التعليمية في فولدرات لسهولة الوصول. 📁</p><a href="https://t.me/Mahmoud_learning_space/111" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                            </div>
+                        </div>
+                        <!-- Photography -->
+                        <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg p-6 card-hover">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-camera text-indigo-600 ml-3"></i>Photography</h3>
+                            <div class="space-y-2">
+                                <div class="accordion-item"><button class="accordion-trigger content-link"><span class="flex items-center"><i class="fas fa-camera-retro link-icon text-indigo-500"></i><span>Dental Photography</span></span><i class="fas fa-chevron-down accordion-icon"></i></button><div class="accordion-content"><div class="content-wrapper"><p class="text-sm text-gray-600 mb-4">أساسيات وتقنيات التصوير الفوتوغرافي في طب الأسنان عشان توثق شغلك زي المحترفين. 📸</p><a href="https://t.me/c/1581316555/110" target="_blank" class="topic-button mt-auto text-center py-2 px-4 rounded-lg text-sm">اذهب للمحتوى</a></div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Row 5 -->
+                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-6 lg:col-span-2 card-hover">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-book text-purple-600 ml-3"></i>ترشيحات الكتب من الدكاترة</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <a href="https://www.facebook.com/100006441592414/posts/pfbid02oeZHmfJjLqjb2ksrELzBWVxK9WQHT83QKLZUx3iPxHBwtC8d4BiDzS7Girt1vZsql/?app=fbl" target="_blank" class="content-link"><i class="fas fa-user-md link-icon text-blue-500"></i><span>ترشيحات د. إسلام زقزوق</span></a>
+                            <a href="https://www.facebook.com/100007469533546/posts/pfbid0qvp3pKBy2doLNfieiFvGDtYT2EFKToVGxDRNbvKjwxYQRXuiSGbfwBrZkhDv4DExl/?app=fbl" target="_blank" class="content-link"><i class="fas fa-user-md link-icon text-green-500"></i><span>ترشيحات د. علي عاطف</span></a>
+                            <a href="https://www.facebook.com/groups/363056172256905/permalink/504844398078081/?app=fbl" target="_blank" class="content-link"><i class="fas fa-user-md link-icon text-purple-500"></i><span>ترشيحات د. عمرو عبدالعزيز</span></a>
+                            <a href="https://t.me/AhmedAshraflearningspace/62" target="_blank" class="content-link"><i class="fas fa-user-md link-icon text-orange-500"></i><span>ترشيحات د. أحمد أشرف</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Tab Content -->
+            <div id="ai-content" class="tab-content p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Smarter With AI Series -->
+                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-6 card-hover">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-robot text-purple-600 ml-3"></i>سلسلة Smarter With AI</h3>
+                        <div class="space-y-2">
+                            <!-- ChatGPT Accordion -->
+                            <div class="accordion-item">
+                                <button class="accordion-trigger content-link">
+                                    <span class="flex items-center"><i class="fas fa-comments link-icon text-green-500"></i>سلسلة ChatGPT</span>
+                                    <i class="fas fa-chevron-down accordion-icon"></i>
+                                </button>
+                                <div class="accordion-content">
+                                    <div class="content-wrapper">
+                                        <a href="https://t.me/Smarter_With_Ai/46" target="_blank" class="content-link sub-link"><span>- ايه هو؟ وايه امكانياته؟</span></a>
+                                        <a href="https://t.me/Smarter_With_Ai/49" target="_blank" class="content-link sub-link"><span>- ميزة ال Deep research</span></a>
+                                        <a href="https://t.me/Smarter_With_Ai/39" target="_blank" class="content-link sub-link"><span>- ميزة ال Study and learn</span></a>
+                                        <a href="https://t.me/Smarter_With_Ai/51" target="_blank" class="content-link sub-link"><span>- كنز ال GPTS الجاهزة</span></a>
+                                        <a href="https://t.me/Smarter_With_Ai/55" target="_blank" class="content-link sub-link"><span>- ازاي تبني مساعد مخصوص ليك</span></a>
+                                        <a href="https://t.me/Smarter_With_Ai/57" target="_blank" class="content-link sub-link"><span>- ازاي تخصص تجربتك اليومية</span></a>
+                                        <a href="https://t.me/Smarter_With_Ai/77" target="_blank" class="content-link sub-link"><span>- ازاي تشترك بأقل تكلفة؟</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Gemini Accordion -->
+                            <div class="accordion-item">
+                                <button class="accordion-trigger content-link">
+                                    <span class="flex items-center"><i class="fas fa-gem link-icon text-blue-500"></i>سلسلة Gemini</span>
+                                    <i class="fas fa-chevron-down accordion-icon"></i>
+                                </button>
+                                <div class="accordion-content">
+                                    <div class="content-wrapper">
+                                        <a href="https://t.me/Smarter_With_Ai/60" target="_blank" class="content-link sub-link"><span>- عمل مساعد شخصي خاص بيك مجانا</span></a>
+                                        <a href="https://t.me/Smarter_With_Ai/43" target="_blank" class="content-link sub-link"><span>- ميزة ال Guided learning</span></a>
+                                        <a href="https://t.me/Smarter_With_Ai/41" target="_blank" class="content-link sub-link"><span>- عمل قصة مصورة تفاعلية</span></a>
+                                        <a href="https://t.me/Smarter_With_Ai/67" target="_blank" class="content-link sub-link"><span>- تفعيل Gemini داخل جوجل درايف</span></a>
+                                        <a href="https://t.me/Smarter_With_Ai/29" target="_blank" class="content-link sub-link"><span>- دليل مبسط عن Gemini</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Prompt Engineering Accordion -->
+                             <div class="accordion-item">
+                                <button class="accordion-trigger content-link">
+                                    <span class="flex items-center"><i class="fas fa-code link-icon text-orange-500"></i>هندسة الأوامر</span>
+                                    <i class="fas fa-chevron-down accordion-icon"></i>
+                                </button>
+                                <div class="accordion-content">
+                                    <div class="content-wrapper">
+                                        <a href="https://t.me/Smarter_With_Ai/62" target="_blank" class="content-link sub-link"><span>- إزاي تتواصل مع الذكاء الاصطناعي صح؟</span></a>
+                                        <a href="https://t.me/Smarter_With_Ai/64" target="_blank" class="content-link sub-link"><span>- إزاي تطلع برومبت احترافي في ٣ خطوات؟</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="https://t.me/Smarter_With_Ai/68" target="_blank" class="content-link"><i class="fas fa-book-open link-icon text-purple-500"></i><span>NotebookLM شرح شامل</span></a>
+                            <a href="https://t.me/Smarter_With_Ai/70" target="_blank" class="content-link"><i class="fas fa-play-circle link-icon text-red-500"></i><span>السلسلة كاملة</span></a>
+                        </div>
+                    </div>
+                    <!-- Smarter Dentists -->
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 card-hover">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-tooth text-blue-600 ml-3"></i>Smarter Dentists</h3>
+                        <div class="space-y-2">
+                            <a href="https://mahmoudtaru.github.io/Smarter-Dentists/" target="_blank" class="content-link"><i class="fas fa-globe link-icon text-blue-500"></i><span>موقع Smarter Dentists With Ai</span></a>
+                            <a href="https://t.me/AhmedAshraflearningspace/73" target="_blank" class="content-link"><i class="fas fa-file-video link-icon text-blue-500"></i><span>تلخيص محاضرة علمية في شكل فيديو</span></a>
+                            <a href="https://t.me/Smarter_With_Ai/42" target="_blank" class="content-link"><i class="fas fa-images link-icon text-green-500"></i><span>قصة مصورة عن زراعة الأسنان</span></a>
+                            <a href="https://t.me/Smarter_With_Ai/59" target="_blank" class="content-link"><i class="fas fa-mobile-alt link-icon text-purple-500"></i><span>تطبيق الأدوية التفاعلي</span></a>
+                            <a href="https://t.me/Mahmoud_learning_space/185" target="_blank" class="content-link"><i class="fas fa-file-alt link-icon text-orange-500"></i><span>مود التلخيص</span></a>
+                        </div>
+                    </div>
+                    <!-- AI Tools & Tips -->
+                    <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6 lg:col-span-2 card-hover">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-magic text-green-600 ml-3"></i>أدوات وتطبيقات عملية</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <a href="https://t.me/Smarter_With_Ai/73" target="_blank" class="content-link"><i class="fas fa-presentation link-icon text-blue-500"></i><span>عمل بريزنتيشن احترافي بـ AI</span></a>
+                            <a href="https://t.me/Smarter_With_Ai/75" target="_blank" class="content-link"><i class="fas fa-search link-icon text-green-500"></i><span>أفضل موقع للبحث بالمصادر</span></a>
+                            <a href="https://t.me/Smarter_With_Ai/54" target="_blank" class="content-link"><i class="fas fa-globe link-icon text-purple-500"></i><span>عمل موقع تفاعلي</span></a>
+                            <a href="https://youtu.be/7WvKcFsAj6E?si=YS2OoCnPKfBovUsm" target="_blank" class="content-link"><i class="fas fa-video link-icon text-red-500"></i><span>حلقة ممتعة عن AI</span></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Weekly Contest -->
+                <div class="mt-8 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-lg p-6">
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold mb-4">🏆 مسابقة Smarter With AI الأسبوعية</h3>
+                        <p class="text-lg mb-4">كل جمعة الساعة 8:18 مساءً - فرصة للفوز بـ Google AI Pro لمدة سنة!</p>
+                        <div class="flex flex-wrap justify-center gap-4">
+                            <div class="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+                                <i class="fas fa-calendar-alt text-2xl mb-2"></i>
+                                <p>كل جمعة</p>
+                            </div>
+                            <div class="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+                                <i class="fas fa-clock text-2xl mb-2"></i>
+                                <p>8:18 مساءً</p>
+                            </div>
+                            <div class="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+                                <i class="fas fa-gift text-2xl mb-2"></i>
+                                <p>Google AI Pro</p>
+                            </div>
+                            <div class="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+                                <i class="fas fa-dollar-sign text-2xl mb-2"></i>
+                                <p>$200+ قيمة</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Community Tab Content -->
+            <div id="community-content" class="tab-content p-6">
+                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Telegram Channels -->
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 card-hover">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i class="fab fa-telegram-plane text-blue-600 ml-3"></i>قنوات التليجرام</h3>
+                        <div class="space-y-2">
+                            <a href="https://t.me/Mahmoud_learning_space" target="_blank" class="content-link"><i class="fas fa-home link-icon text-green-500"></i><span>Mahmoud's Learning Space الرئيسية</span></a>
+                            <a href="https://t.me/Smarter_With_Ai" target="_blank" class="content-link"><i class="fas fa-robot link-icon text-purple-500"></i><span>قناة Smarter With AI</span></a>
+                            <a href="https://t.me/AhmedAshraflearningspace" target="_blank" class="content-link"><i class="fas fa-user-graduate link-icon text-teal-500"></i><span>Dr/Ahmed Ashraf channel</span></a>
+                            <a href="https://t.me/Perioround" target="_blank" class="content-link"><i class="fas fa-leaf link-icon text-pink-500"></i><span>Diagnosis Round</span></a>
+                            <a href="https://t.me/Endoround" target="_blank" class="content-link"><i class="fas fa-syringe link-icon text-red-500"></i><span>Endo Round</span></a>
+                            <a href="https://t.me/oralaurgeryround" target="_blank" class="content-link"><i class="fas fa-cut link-icon text-orange-500"></i><span>Oral Surgery Round</span></a>
+                            <a href="https://t.me/Xrayround" target="_blank" class="content-link"><i class="fas fa-x-ray link-icon text-blue-500"></i><span>X-ray Round</span></a>
+                        </div>
+                    </div>
+                    <!-- Specialized Groups -->
+                    <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6 card-hover">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-users text-green-600 ml-3"></i>مجموعات متخصصة</h3>
+                        <div class="space-y-2">
+                            <a href="https://t.me/Rubberdamtipsandtricks" target="_blank" class="content-link"><i class="fas fa-shield-alt link-icon text-blue-500"></i><span>Rubber Dam Tips</span></a>
+                            <a href="https://t.me/Posterior_composite" target="_blank" class="content-link"><i class="fas fa-tooth link-icon text-green-500"></i><span>Posterior Composite</span></a>
+                            <a href="https://t.me/Anteriorcomposite" target="_blank" class="content-link"><i class="fas fa-smile link-icon text-pink-500"></i><span>Anterior Composite</span></a>
+                            <a href="https://t.me/FinishingandPolishing" target="_blank" class="content-link"><i class="fas fa-gem link-icon text-indigo-500"></i><span>Finishing & Polishing</span></a>
+                            <a href="https://t.me/dentalcasepresentation" target="_blank" class="content-link"><i class="fas fa-camera link-icon text-purple-500"></i><span>Documentation</span></a>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+
+            <!-- Join Tab Content -->
+            <div id="join-content" class="tab-content p-6">
+                <div class="max-w-4xl mx-auto">
+                    <!-- Social Links -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <a href="https://t.me/Mahmoud_learning_space" target="_blank" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-6 text-center hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:-translate-y-1">
+                            <i class="fab fa-telegram-plane text-4xl mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">قناة التليجرام الرئيسية</h3>
+                            <p>+15K مشترك | محتوى يومي</p>
+                        </a>
+                        <a href="https://www.facebook.com/share/g/15abZQfAVq/" target="_blank" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg p-6 text-center hover:from-blue-700 hover:to-blue-800 transition-all duration-300 transform hover:-translate-y-1">
+                            <i class="fab fa-facebook-f text-4xl mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">جروب الفيسبوك</h3>
+                            <p>تفاعل ومناقشات</p>
+                        </a>
+                    </div>
+                    
+                    <!-- WhatsApp Link -->
+                    <div class="mb-8">
+                         <a href="https://chat.whatsapp.com/DaC9mHvpVzb7Gdj9BHDEzz" target="_blank" class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg p-6 text-center block hover:from-green-600 hover:to-green-700 transition-all duration-300 transform hover:-translate-y-1">
+                            <i class="fab fa-whatsapp text-4xl mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">مجتمع الواتساب</h3>
+                            <p>انضم للنقاشات والتواصل المباشر</p>
+                        </a>
+                    </div>
+                    
+                    <!-- Contact Info -->
+                    <div class="mt-8 text-center">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">عندك سؤال أو اقتراح؟</h3>
+                        <p class="text-gray-600 mb-4">تواصل معانا في أي وقت! إحنا هنا عشان نساعدك ونتعلم سوا</p>
+                        <div class="flex justify-center">
+                            <a href="https://www.facebook.com/profile.php?id=61577068962672" target="_blank" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                                <i class="fab fa-facebook-f mr-2"></i>
+                                راسلنا على الفيسبوك
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Action Button -->
+    <div class="floating-action no-print">
+        <a href="https://t.me/Mahmoud_learning_space" target="_blank" class="bg-gradient-to-r from-green-500 to-blue-500 text-white w-14 h-14 flex items-center justify-center rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300">
+            <i class="fab fa-telegram-plane text-2xl"></i>
+        </a>
+    </div>
+
+    <!-- Custom Alert Box -->
+    <div id="custom-alert" class="no-print">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span id="alert-message"></span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+             <div class="flex items-center justify-center mb-4">
+                <div class="bg-green-500 rounded-full p-2 mr-3">
+                    <span class="text-white text-xl font-bold">M</span>
+                </div>
+                <h3 class="text-xl font-bold">Mahmoud's Learning Space 😀</h3>
+            </div>
+            <p class="text-gray-400 mb-4">رحلة التعلم المستمر في طب الأسنان والذكاء الاصطناعي</p>
+            <div class="flex justify-center space-x-6 space-x-reverse mb-4">
+                <a href="https://t.me/Mahmoud_learning_space" target="_blank" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-telegram-plane text-2xl"></i></a>
+                <a href="https://www.facebook.com/share/g/15abZQfAVq/" target="_blank" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-facebook-f text-2xl"></i></a>
+                <a href="https://chat.whatsapp.com/DaC9mHvpVzb7Gdj9BHDEzz" target="_blank" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-whatsapp text-2xl"></i></a>
+            </div>
+            <p class="text-sm text-gray-500">
+                © 2025 Mahmoud's Learning Space. صُنع بـ ❤️ للمجتمع التعليمي
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Tab Functionality ---
+            window.showTab = function(tabName) {
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
+                document.querySelectorAll('.tab-desc').forEach(desc => desc.classList.remove('active'));
+                
+                document.getElementById(tabName + '-content').classList.add('active');
+                document.getElementById(tabName + '-tab').classList.add('active');
+                document.getElementById(tabName + '-desc').classList.add('active');
+            }
+
+            window.showTabAndScroll = function(tabName) {
+                showTab(tabName);
+                document.getElementById('main-content').scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // --- Accordion Functionality ---
+            const accordionTriggers = document.querySelectorAll('.accordion-trigger');
+            accordionTriggers.forEach(trigger => {
+                trigger.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const content = this.nextElementSibling;
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    }
+                });
+            });
+
+            // --- Search Functionality ---
+            const searchInput = document.getElementById('searchInput');
+            const allContentLinks = document.querySelectorAll('.content-link, .sub-link');
+            const allCards = document.querySelectorAll('.card-hover');
+            const allAccordions = document.querySelectorAll('.accordion-item');
+
+            // Store original text for resetting search highlights
+            allContentLinks.forEach(link => {
+                const textSpan = link.querySelector('span');
+                if (textSpan) {
+                    link.dataset.originalText = textSpan.innerHTML;
+                }
+            });
+
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase().trim();
+
+                if (searchTerm.length === 0) {
+                    // Reset all content
+                    allContentLinks.forEach(link => {
+                        link.style.display = 'flex';
+                        const textSpan = link.querySelector('span');
+                        if (textSpan && link.dataset.originalText) {
+                            textSpan.innerHTML = link.dataset.originalText;
+                        }
+                    });
+                    allCards.forEach(card => card.style.display = 'block');
+                     // Close all accordions
+                    allAccordions.forEach(item => {
+                        const trigger = item.querySelector('.accordion-trigger');
+                        const content = item.querySelector('.accordion-content');
+                        trigger.classList.remove('active');
+                        content.style.maxHeight = null;
+                    });
+                    return;
+                }
+                
+                const searchRegex = new RegExp(searchTerm.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'gi');
+
+                allContentLinks.forEach(link => {
+                    const originalText = link.dataset.originalText || '';
+                    if (originalText.toLowerCase().includes(searchTerm)) {
+                        link.style.display = 'flex';
+                        const textSpan = link.querySelector('span');
+                        if (textSpan) {
+                            textSpan.innerHTML = originalText.replace(searchRegex, `<span class="search-highlight">$&</span>`);
+                        }
+                    } else {
+                        link.style.display = 'none';
+                    }
+                });
+
+                // Handle accordion visibility based on search
+                allAccordions.forEach(item => {
+                    const trigger = item.querySelector('.accordion-trigger');
+                    const content = item.querySelector('.accordion-content');
+                    const visibleSubLinks = content.querySelectorAll('.sub-link[style*="display: flex"]');
+                    
+                    if (visibleSubLinks.length > 0) {
+                        trigger.style.display = 'flex';
+                        trigger.classList.add('active');
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    } else if (trigger.dataset.originalText && !trigger.dataset.originalText.toLowerCase().includes(searchTerm)) {
+                         trigger.style.display = 'none';
+                    }
+                });
+
+                // Hide cards that have no visible links
+                allCards.forEach(card => {
+                    const visibleLinks = card.querySelectorAll('.content-link[style*="display: flex"]');
+                    if (visibleLinks.length === 0) {
+                        card.style.display = 'none';
+                    } else {
+                        card.style.display = 'block';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
